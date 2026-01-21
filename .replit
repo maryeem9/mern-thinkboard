@@ -1,6 +1,9 @@
 language = "nodejs"
 run = "npm run build; npm start"
 
+[build]
+build = "npm run build"
+
 [env]
 MONGO_URI = "mongodb+srv://rasoolmaryeem_db_user:sLlhSSZ6WROCoSVw@cluster0.jmxw34s.mongodb.net/notes_db?appName=Cluster0"
 PORT = "5001"
