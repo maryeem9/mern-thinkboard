@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
 
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
@@ -9,43 +8,36 @@ import rateLimiter from "./middleware/rateLimiter.js";
 
 dotenv.config();
 
-//console.log(process.env.MONGO_URI);
-
 const app = express();
 const PORT = process.env.PORT || 5001;
-const __dirname = path.resolve();
 
-//middleware...  withour this line , req.body will be undefined in controllers
+// =====================
+// Middleware
+// =====================
+app.use(
+  cors({
+    origin: "*", // allow requests from anywhere (frontend later)
+  })
+);
 
-if (process.env.NODE_ENV !== "production") {
-  app.use(
-    cors({
-      origin: "http://localhost:5173", // frontend URL
-    }),
-  );
-}
-
-app.use(express.json()); // to parse JSON bodies
+app.use(express.json()); // parse JSON bodies
 app.use(rateLimiter);
 
-//// Custom middleware
-// app.use((req, res, next) => {
-//     console.log(`Req method is ${req.method} & Req URL is ${req.url}`);
-//     next();
-// });
-
+// =====================
+// Routes
+// =====================
 app.use("/api/notes", notesRoutes);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend/dist")));
+// Health check (optional but helpful)
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
+});
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
-  });
-}
-
+// =====================
+// Start Server
+// =====================
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server is running on port:`, PORT);
+    console.log(`Server running on port: ${PORT}`);
   });
 });
