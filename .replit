@@ -1,4 +1,5 @@
-run = "npm run build && npm start"
+language = "nodejs"
+run = "npm run build; npm start"
 
 [env]
 MONGO_URI = "mongodb+srv://rasoolmaryeem_db_user:sLlhSSZ6WROCoSVw@cluster0.jmxw34s.mongodb.net/notes_db?appName=Cluster0"
